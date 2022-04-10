@@ -1,0 +1,16 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+
+[deps]
+
+files=[ "res://dades/valencia.ca.translation", "res://dades/valencia.es.translation" ]
+
+source_file="res://dades/valencia.csv"
+dest_files=[ "res://dades/valencia.ca.translation", "res://dades/valencia.es.translation" ]
+
+[params]
+
+compress=true
+delimiter=0

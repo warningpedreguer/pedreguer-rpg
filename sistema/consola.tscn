@@ -1,0 +1,45 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://sistema/consola.gd" type="Script" id=1]
+[ext_resource path="res://sistema/estils/valkyrstil01.tres" type="Theme" id=2]
+[ext_resource path="res://sistema/comandos.gd" type="Script" id=3]
+
+[node name="consola" type="Control"]
+pause_mode = 2
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 1 )
+
+[node name="comandos" type="Node" parent="."]
+script = ExtResource( 3 )
+
+[node name="vinterface" type="VBoxContainer" parent="."]
+margin_right = 448.0
+margin_bottom = 192.0
+theme = ExtResource( 2 )
+
+[node name="pantallatext" type="TextEdit" parent="vinterface"]
+margin_right = 448.0
+margin_bottom = 174.0
+grow_horizontal = 0
+grow_vertical = 0
+size_flags_vertical = 3
+text = "Valkyr - Consola comandaments"
+readonly = true
+show_line_numbers = true
+context_menu_enabled = false
+shortcut_keys_enabled = false
+wrap_enabled = true
+
+[node name="introtext" type="LineEdit" parent="vinterface"]
+margin_top = 178.0
+margin_right = 448.0
+margin_bottom = 192.0
+focus_neighbour_left = NodePath(".")
+focus_neighbour_top = NodePath(".")
+focus_neighbour_right = NodePath(".")
+focus_neighbour_bottom = NodePath(".")
+focus_next = NodePath(".")
+focus_previous = NodePath(".")
+context_menu_enabled = false
+caret_blink = true

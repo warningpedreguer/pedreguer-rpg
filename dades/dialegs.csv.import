@@ -1,0 +1,16 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+
+[deps]
+
+files=[ "res://dades/dialegs.ca.translation", "res://dades/dialegs.es.translation" ]
+
+source_file="res://dades/dialegs.csv"
+dest_files=[ "res://dades/dialegs.ca.translation", "res://dades/dialegs.es.translation" ]
+
+[params]
+
+compress=true
+delimiter=0

@@ -1,0 +1,27 @@
+,ca,es
+HOLA,Hola,Hola
+NOMJOC,Valkyr,Valkyr
+TITOLCOMANDO,Consola de comandaments,Consola de comandos
+ERRORCOMANDO,ERROR! El comandament ,ERROR! El comando 
+ESPERAVA, esperava , esperaba 
+ARGUMENTS, arguments, argumentos
+ERRORPARAMETRE,ERROR! El parametre ,ERROR! El parametro 
+INCORRECTECOMANDO,", es incorrecte per al comandament '",", es incorrecto para el comando '"
+WARNINGCOMANDO,WARNING! El comandament ',WARNING! El comando '
+COMANDONOVALID, no és vàlid., no es válido.
+SHAESCRIT,S'ha escrit,Se ha escrito
+ENELDEBUG,al debug,en el debug
+ELSCOMANDOSSON,Els comandos son:,Los comandos son:
+DRETA,dreta,derecha
+ESQUERRA,esquerra,izquierda
+DALT,dalt,arriba
+BAIX,baix,abajo
+JUGADORCAMINAT,El jugador ha caminat ,El jugador ha caminado 
+PASSESCAPA, passes cap a , pasos hacia 
+ESTATACTUAL,ESTAT ACTUAL: ,ESTADO ACTUAL: 
+ESTATANTERIOR,ESTAT ANTERIOR: ,ESTADO ANTERIOR: 
+ELPERSONATGE,El personatge,El personaje
+NOEXISTEIX,no existeix,no existe
+NOESVALIDA,no és valida,no es valida
+LADIRECCIO,La direcció,La dirección
+HACAMINAT,ha caminat,ha caminado
