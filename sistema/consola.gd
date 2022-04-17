@@ -112,14 +112,14 @@ func neteja() -> void:
 
 func _input(event: InputEvent) -> void:
 	#Navega per lhistorial de comandos introduits
-	if event.is_action_pressed("tecladalt"):
+	if event.is_action_pressed("ui_up"):
 		if historialcursor>=historialcomandos.size()-1: return
 		historialcursor+=1
 		introtext.clear()
 		introtext.text=historialcomandos[historialcursor]
 		yield(get_tree(), "idle_frame")
 		introtext.caret_position=introtext.text.length()
-	elif event.is_action_pressed("teclabaix"):
+	elif event.is_action_pressed("ui_down"):
 		if historialcursor<=0:
 			historialcursor=-1
 			introtext.text=""

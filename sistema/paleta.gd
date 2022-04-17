@@ -8,6 +8,7 @@ func _ready() -> void:
 		obhorizontal.name="horizontal"
 		obhorizontal.set("custom_constants/separation",10)
 		self.add_child(obhorizontal)
+		#obhorizontal.set_owner(self)
 	for item in $horizontal.get_children():
 		item.queue_free()
 	var puntero:int=0
@@ -18,8 +19,14 @@ func _ready() -> void:
 		item.rect_min_size=Vector2(40,40)
 		item.color=global.color[color]
 		$horizontal.add_child(item)
+		#item.set_owner($horizontal)
 		puntero+=1
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta: float) -> void:
 #	pass
+
+func _exit_tree() -> void:
+	var _vergaputa=$horizontal.get_children()
+	for node in _vergaputa:
+		node.queue_free()

@@ -15,7 +15,7 @@ const comandosvalids=[
 	["escriu",[tipo_string],["marca","remarca"],"escriu <text>"],
 	["neteja",[],["netetja","cls","clear","limpia","borra"],"Borra tot el text de la consola"],
 	["sobre",[],["about","versio","version"],"Mostra la versió del joc"],
-	["llista",[tipo_string],["list","lista"],"llista <valor> (ex: llista jugador)"],
+	["llista",[tipo_string],["list","lista","llistat","listado"],"llista <valor> (ex: llista jugador)"],
 	["ajuda",[tipo_string],["help","ayuda"],"ajuda <comando> (ex: ajuda escena) (ajuda list, mostra tots els comandos)"],
 	["llig",[tipo_string],["read","lee","llegir","leer"],"llig <variable>"],
 	["ataca",[],[],"ataca (Ordena al personatge actual a fer un atac)"],
@@ -33,6 +33,10 @@ const comandosvalids=[
 	["estadistiques",[],["stats","estatics","estadisticas","estats"],"Mostra el menú d'estadistiques"],
 	["paleta",[],["palette","colors","color"],"Mostra la paleta de colors"],
 	["aspija",[tipo_string,tipo_int],["espija","tiracapalla"],"Locura perque mou la consola"],
+	["orfans",[],["orfa","orphan"],"Mostra nodes perduts"],
+	["gira",[tipo_string,tipo_string],["turn","mira"],"gira <personatge> <direccio> (Gira el personatge en una direcció)"],
+	["web",[tipo_string],["navega"],"web <url> (Intenta carregar la URL d'internet)"],
+	["musica",[tipo_string],["posamusica","music","play","reproduir","canso","canço","cançó","cançons","cansons","canción","canciones","mp3","cancion","song","theme","bso","ost"],"musica <titol>.mp3 (Sona una música de fons)"],
 	["pantallacompleta",[],["fullscreen","full"],"Passa a mode pantalla completa"]
 ]
 
@@ -64,6 +68,13 @@ func llista(parametre):
 		for perso in global.personatges:
 			_llistatpersonatges=_llistatpersonatges+" "+str(perso.get_name())
 		return "Personatges disponibles:"+str(_llistatpersonatges)
+	elif ["musica","music","cançons","cansons","canción","canciones","mp3"\
+	,"cancion","song","theme","bso","ost"].has(parametre):
+		var _llistatcansons:Array=minicadena.llista("res://audio/musica/")
+		var _llista:String=""
+		for canso in _llistatcansons:
+			_llista+="\n"+str(canso)
+		return "Les següents cançons estan disponibles"+_llista+"\n Per a escoltar, scriu: musica <titol>"
 
 func ajuda(parametre):
 	if ["llista","list","lista"].has(parametre):
@@ -178,27 +189,26 @@ func controlable(_personatge):
 	if ["ningu","cap","0","null"].has(_personatge):
 		for perso in global.personatges:
 			if !perso.get("controlable"):continue #Si no te la propietat controlable passa al seguent del bucle
-			perso.controlable=false
-			perso._reinicia_parametres() #borrar?
-		#global.jugador=null
+			perso.dona_el_control()
+		global.jugador=null
 		return "Ara no controles a ningú!"
 	var _persotempo=comprovapersonatge(_personatge)
 	match typeof(_persotempo):
 		TYPE_STRING: return _persotempo
 		TYPE_OBJECT: _personatge=_persotempo
 		_: return "ERROR"
+	if _personatge.get("controlable")==null:return "El personatge no pot ser controlable"
 	if global.jugador!=null:
 		if _personatge.name==global.jugador.name: return "Ja tens el control de tu mateixa!!"
-	for perso in global.personatges: 
+	for perso in global.personatges:
+		if perso.get("controlable")==null:continue 
 		if perso.get_name()==_personatge.get_name():
 			global.jugador=perso
-			if !perso.get("controlable"):return "El personatge no pot ser controlable"
-			perso.controlable=true
-			perso._reinicia_parametres() #borrar?
-			return tr("ELPERSONATGE")+" '"+str(_personatge.name)+" ara és controlable!"
-		if !perso.get("controlable"):continue
-		perso.controlable=false
-		perso._reinicia_parametres() #borrar?
+			if perso.controlable:continue #aborta si ja té estat controlable
+			perso.dona_el_control() #dona el control
+		elif perso.controlable:
+			perso.dona_el_control() #lleva el control
+	return tr("ELPERSONATGE")+" '"+str(_personatge.name)+" ara és controlable!"
 
 func interactua(personatge):
 	var _persotempo=comprovapersonatge(personatge)
@@ -250,6 +260,51 @@ func aspija(direccio,pases):
 	consola.objectiu=dinamica+consola.rect_position
 	consola.moviment=true
 	return "Es mou "+str(pases)+" cap a la "+str(direccio)+", fins aplegar a "+str(dinamica+consola.rect_position)
+
+func orfans():
+	 return print_stray_nodes()
+
+func gira(personatge, direccio):
+	var _persotempo=comprovapersonatge(personatge)
+	match typeof(_persotempo):
+		TYPE_STRING: return _persotempo
+		TYPE_OBJECT: personatge=_persotempo
+		_: return "ERROR"
+	match direccio:
+		"dreta", "esquerra", "dalt", "baix":
+			if !personatge.has_method("gira"):return tr("ELPERSONATGE")+" '"+str(personatge.get_name())\
+			+"' no pot girar!"
+			personatge.gira(direccio)
+		_:
+			return tr("LADIRECCIO")+" '"+str(direccio)+"' "+tr("NOESVALIDA")
+	return tr("ELPERSONATGE")+" '"+str(personatge.get_name())+"' "+" s'ha girat cap a la "+str(direccio)
+
+func web(_url:String):
+	var superconnexio:HTTPRequest=HTTPRequest.new()
+	add_child(superconnexio)
+	# warning-ignore:return_value_discarded
+	superconnexio.connect("request_completed",self,"connexiocompletada")
+	var _error=superconnexio.request("https://"+_url)
+	if _error!=OK:
+		push_error("La connexió no està disponible")
+	return "De moment no está disponible aquesta funció"
+
+func connexiocompletada(_resultat, _codi_resposta, _capsalera, coset):
+	var _imatge:Image=Image.new()
+	var _error=_imatge.load_jpg_from_buffer(coset)
+	if _error!=OK:
+		push_error("No sha carregat bé l'imatge!")
+	var _textura:ImageTexture=ImageTexture.new()
+	_textura.create_from_image(_imatge)
+	var _panelltextura:TextureRect=TextureRect.new()
+	add_child(_panelltextura)
+	_panelltextura.texture=_textura
+
+func musica(_canso:String):
+	if ["llista","list","lista","llistat","listado"].has(_canso):
+		return llista("mp3")
+	var _reprodueix:String=minicadena.musica(_canso)
+	return _reprodueix
 
 func pantallacompleta():
 	#get_tree().set_screen_stretch(SceneTree.STRETCH_MODE_VIEWPORT,  SceneTree.STRETCH_ASPECT_EXPAND, Vector2(1280,720),0.5)

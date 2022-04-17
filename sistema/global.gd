@@ -11,6 +11,7 @@ onready var consolaid:Object=get_node_or_null("root/hud/consola")
 #millor crear una classe que es diga dialeg o bambolla
 ########################################
 ########################################
+var interactuable:PackedScene = preload("res://objectes/interactuable.tscn")
 var bambolla = preload("res://sistema/dialeg.tscn")
 var obconsola = preload("res://sistema/consola.tscn")
 var obestadistiques = preload("res://sistema/estadistiques.tscn")
@@ -102,7 +103,7 @@ func anyadeix_a_hud(objecte:String):
 		hud=obhud #guarda lobjecte node dins de la variable global hud
 	if !self.get_parent().get_node("hud").get_node_or_null(objecte):
 		var objectetemp=get("ob"+objecte).instance()
-		get_parent().get_node("hud").add_child(get("ob"+objecte).instance())
+		get_parent().get_node("hud").add_child(objectetemp)
 		return objectetemp
 
 func lleva_de_hud(objecte:String):
